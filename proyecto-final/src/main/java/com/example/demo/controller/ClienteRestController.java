@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.service.IClienteService;
 import com.example.demo.to.ClienteTo;
 import com.example.demo.to.ClienteVIP;
+import com.example.demo.to.CuentaTo;
 
 @RestController
 @RequestMapping("/api/v1/clientes")
@@ -23,10 +24,15 @@ public class ClienteRestController {
 	@Autowired
 	private IClienteService service;
 	
+	
+	
+	public ClienteRestController(IClienteService service) {
+		this.service = service;
+	}
+
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> insertarCliente(@RequestBody ClienteTo cto) {
-		service.insertarCliente(cto);
-		return ResponseEntity.ok("Cliente registrado");
+		return ResponseEntity.ok(service.insertarCliente(cto));
 	}
 	
 	@GetMapping(path = "/{cedula}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -37,6 +43,11 @@ public class ClienteRestController {
 	@GetMapping(path = "/vip", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ClienteVIP>> listarVIP() {
 		return ResponseEntity.ok(service.listarVIP());
+	}
+	
+	@GetMapping(path = "/auth/{username}")
+	public ResponseEntity<CuentaTo> auth(@PathVariable("username") String username) {
+		return ResponseEntity.ok(service.buscarClientePorUsername(username));
 	}
 	
 }

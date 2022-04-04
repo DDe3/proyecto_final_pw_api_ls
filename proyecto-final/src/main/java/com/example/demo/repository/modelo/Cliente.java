@@ -28,7 +28,7 @@ public class Cliente {
 	@SequenceGenerator(name = "seq_cliente", sequenceName = "seq_cliente", allocationSize = 1)
 	@Column(name="clie_id")
 	private Integer id;
-	@Column(name="clie_cedula")
+	@Column(name="clie_cedula", unique = true)
 	private String cedula;
 	@Column(name="clie_nombre")
 	private String nombre;
@@ -47,13 +47,13 @@ public class Cliente {
 	
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "cliente")
-	private UsuarioEntidad cuenta;
+	private Cuenta cuenta;
 	
-	public UsuarioEntidad getCuenta() {
+	public Cuenta getCuenta() {
 		return cuenta;
 	}
 
-	public void setCuenta(UsuarioEntidad cuenta) {
+	public void setCuenta(Cuenta cuenta) {
 		this.cuenta = cuenta;
 	}
 
@@ -121,6 +121,8 @@ public class Cliente {
 	public void setRegistro(Character registro) {
 		this.registro = registro;
 	}
+
+	
 	
 	
 	

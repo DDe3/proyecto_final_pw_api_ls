@@ -12,9 +12,13 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.controller.ClienteRestController;
 import com.example.demo.repository.IClienteRepository;
+import com.example.demo.repository.ICuentaRepo;
 import com.example.demo.repository.modelo.Cliente;
+import com.example.demo.repository.modelo.Cuenta;
 import com.example.demo.to.ClienteTo;
 import com.example.demo.to.ClienteVIP;
+import com.example.demo.to.CuentaTo;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -23,10 +27,24 @@ public class ClienteServiceImpl implements IClienteService {
 	
 	@Autowired
 	private IClienteRepository repository;
+	
+	@Autowired
+	private ICuentaRepo cuentaRepo;
+	
+	
+	
+
+	public ClienteServiceImpl(IClienteRepository repository, ICuentaRepo cuentaRepo) {
+		this.repository = repository;
+		this.cuentaRepo = cuentaRepo;
+	}
+
+
 
 	@Override
-	public void insertarCliente(ClienteTo cliente) {
+	public String insertarCliente(ClienteTo cliente) {
 		repository.insertarCliente(mapClienteTo(cliente));
+		return "Cliente registrado";
 	}
 	
 	
@@ -40,6 +58,11 @@ public class ClienteServiceImpl implements IClienteService {
 		c.setGenero(cto.getGenero());
 		c.setRegistro(cto.getRegistro());
 		c.setReservaciones(new ArrayList<>());
+		Cuenta cuenta = new Cuenta();
+		cuenta.setUsername(cto.getUsername());
+		cuenta.setPassword(cto.getPassword());
+		c.setCuenta(cuenta);
+		cuenta.setCliente(c);
 		return c;
 	}
 
@@ -80,7 +103,7 @@ public class ClienteServiceImpl implements IClienteService {
 		return clientesVIP;
 	}
 	
-	private ClienteVIP mapClienteToVIP(Cliente c) {
+	public ClienteVIP mapClienteToVIP(Cliente c) {
 		ClienteVIP cv = new ClienteVIP();
 		cv.setCedula(c.getCedula());
 		cv.setNombre(c.getNombre());
@@ -93,6 +116,17 @@ public class ClienteServiceImpl implements IClienteService {
 		cv.add(myLink);
 		return cv;
 		
+	}
+
+
+
+	@Override
+	public CuentaTo buscarClientePorUsername(String username) {
+		Cuenta cuenta = cuentaRepo.buscarCuentaPorUsername(username);
+		CuentaTo cto = new CuentaTo();
+		cto.setUsername(cuenta.getUsername());
+		cto.setPassword(cuenta.getPassword());
+		return cto;
 	}
 	
 	

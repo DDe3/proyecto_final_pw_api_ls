@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.repository.modelo.Reserva;
 import com.example.demo.service.IReservaService;
 import com.example.demo.to.ReservaReporteTo;
+import com.example.demo.to.ReservaTo;
 
 @RestController
-@RequestMapping("/api/v1/clientes/reservaciones")
+@RequestMapping("/api/v1/reservaciones")
 public class ReservasRestController {
 	
 	@Autowired
@@ -31,6 +32,11 @@ public class ReservasRestController {
 	@GetMapping(path = "/{numReserva}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Reserva> getReserva(@PathVariable("numReserva") String numReserva) {
 		return ResponseEntity.ok(service.buscarReserva(numReserva));
+	}
+	
+	@GetMapping(path = "/{numReserva}/info", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ReservaTo> getReservaRetirar(@PathVariable("numReserva") String numReserva) {
+		return ResponseEntity.ok(service.buscarReservaRetirar(numReserva));
 	}
 	
 	

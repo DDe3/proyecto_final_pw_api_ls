@@ -36,6 +36,29 @@ public class VehiculoServiceImpl implements IVehiculoService {
 	
 	@Autowired
 	private IClienteService clienteService;
+	
+	
+	
+	
+
+	public VehiculoServiceImpl(IVehiculoRepo vehiculoRepo, IReservaService reservaService,
+			IClienteService clienteService) {
+		this.vehiculoRepo = vehiculoRepo;
+		this.reservaService = reservaService;
+		this.clienteService = clienteService;
+	}
+	
+	
+
+	public VehiculoServiceImpl() {
+		
+	}
+	
+	public VehiculoServiceImpl(IVehiculoRepo vehiculoRepo) {
+		this.vehiculoRepo = vehiculoRepo;
+	}
+
+
 
 	@Override
 	public String reservarVehiculo(String placa, String cedula, String fechaInicio, String fechaFin, String numeroTarjeta) {
@@ -44,7 +67,7 @@ public class VehiculoServiceImpl implements IVehiculoService {
 		LocalDate fin = LocalDate.parse(fechaFin);
 		String estado = verificarVehiculo(placa, inicio, fin);
 		if (estado=="No Disponible") {
-			return "Este vehículo ya está reservado de: " + fechaFin + " a: " +fechaFin;
+			return "Este vehículo ya está reservado para esas fechas";
 		} else {
 			Vehiculo v = vehiculoRepo.buscarVehiculoPorPlaca(placa);
 			Reserva reserva = new Reserva();
@@ -96,9 +119,14 @@ public class VehiculoServiceImpl implements IVehiculoService {
 	
 	
 	
-	private String verificarVehiculo(String placa, LocalDate fechaInicio, LocalDate fechaFin) {
+	public String verificarVehiculo(String placa, LocalDate fechaInicio, LocalDate fechaFin) {
 		Vehiculo v = vehiculoRepo.buscarVehiculoPorPlaca(placa);
-		return estaDisponible(fechaInicio, fechaFin, v.getReservaciones());
+		if (v!=null) {
+			return estaDisponible(fechaInicio, fechaFin, v.getReservaciones());
+		} else {
+			return null;
+		}
+		
 	}
 	
 //	
@@ -119,7 +147,7 @@ public class VehiculoServiceImpl implements IVehiculoService {
 //		return null;
 //	}
 	
-	private String estaDisponible(LocalDate fechaInicio, LocalDate fechafin, List<Reserva> reservaciones) {
+	public String estaDisponible(LocalDate fechaInicio, LocalDate fechafin, List<Reserva> reservaciones) {
 		if (reservaciones.isEmpty()) {
 			return "Disponible";
 		} else {
@@ -137,7 +165,7 @@ public class VehiculoServiceImpl implements IVehiculoService {
 		
 	}
 	
-	private Long daysBetween(LocalDate fechaInicio, LocalDate fechaFin) {
+	public Long daysBetween(LocalDate fechaInicio, LocalDate fechaFin) {
 		long noOfDaysBetween = ChronoUnit.DAYS.between(fechaInicio, fechaFin);
 		if (noOfDaysBetween>0) {
 			return noOfDaysBetween;
@@ -196,11 +224,17 @@ public class VehiculoServiceImpl implements IVehiculoService {
 	@Override
 	public String retirarVehiculo(String numero) {
 		Reserva r = reservaService.buscarReserva(numero);
-		Vehiculo v = r.getVehiculo();
-		v.setEstado("No Disponible");
-		r.setEstado("Ejecutada");
-		vehiculoRepo.actualizarVehiculo(v);
-		return null;
+		if (r.getEstado().equalsIgnoreCase("Ejecutada")) {
+			return "Esta reserva ya fue ejecutada";
+		} else {
+			Vehiculo v = r.getVehiculo();
+			v.setEstado("No Disponible");
+			r.setEstado("Ejecutada");
+			vehiculoRepo.actualizarVehiculo(v);
+			return "Reserva ejecutada. Vehiculo retirado";
+		}
+		
+		
 	}
 	
 	

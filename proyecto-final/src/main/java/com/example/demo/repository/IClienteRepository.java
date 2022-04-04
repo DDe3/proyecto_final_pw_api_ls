@@ -9,5 +9,6 @@ public interface IClienteRepository {
 	void insertarCliente(Cliente cliente);
 	Cliente buscarCliente(String cedula);
 	List<Cliente> buscarTodos();
+	Cliente buscarClientePorUsername(String username);
 
 }

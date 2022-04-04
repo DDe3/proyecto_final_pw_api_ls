@@ -39,6 +39,13 @@ public class ClienteRepositoryImpl implements IClienteRepository {
 		TypedQuery<Cliente> mq = em.createQuery("SELECT c FROM Cliente c", Cliente.class);
 		return mq.getResultList();
 	}
+
+	@Override
+	public Cliente buscarClientePorUsername(String username) {
+		TypedQuery<Cliente> mq = em.createQuery("SELECT c FROM Cliente c WHERE c.cuenta.username=:username", Cliente.class);
+		mq.setParameter("username", username);
+		return mq.getSingleResult();
+	}
 	
 	
 

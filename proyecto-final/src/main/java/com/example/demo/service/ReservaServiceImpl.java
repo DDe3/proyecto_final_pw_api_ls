@@ -13,6 +13,7 @@ import com.example.demo.repository.IReservaRepo;
 import com.example.demo.repository.modelo.Reserva;
 import com.example.demo.repository.modelo.Vehiculo;
 import com.example.demo.to.ReservaReporteTo;
+import com.example.demo.to.ReservaTo;
 import com.example.demo.to.RetirarRequestTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -69,6 +70,7 @@ public class ReservaServiceImpl implements IReservaService {
 		rrto.setFechaInicio(reserva.getFechaInicio().toString());
 		rrto.setFechaFin(reserva.getFechaFin().toString());
 		rrto.setValorTotalAPagar(reserva.getValorTotalAPagar());
+		rrto.setEstado(reserva.getEstado());
 		rrto.setNombreCliente(reserva.getCliente().getNombre() + " " + reserva.getCliente().getApellido());
 		rrto.setCedulaCliente(reserva.getCliente().getCedula());
 		rrto.setPlacaVehiculo(reserva.getVehiculo().getPlaca());
@@ -77,6 +79,19 @@ public class ReservaServiceImpl implements IReservaService {
 		Link myLink = linkTo(methodOn(ReservasRestController.class).getReserva(rrto.getNumero())).withRel("link");
 		rrto.add(myLink);
 		return rrto;
+	}
+
+	@Override
+	public ReservaTo buscarReservaRetirar(String numero) {
+		Reserva r = buscarReserva(numero);
+		ReservaTo rto = new ReservaTo();
+		Vehiculo v = r.getVehiculo();
+		rto.setPlaca(v.getPlaca());
+		rto.setModelo(v.getModelo());
+		rto.setEstado(v.getEstado());
+		rto.setFecha(r.getFechaInicio().toString() + " - " + r.getFechaFin().toString());
+		rto.setCedula(r.getCliente().getCedula());
+		return rto;
 	}
 	
 

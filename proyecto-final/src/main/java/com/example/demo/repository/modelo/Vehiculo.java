@@ -23,7 +23,7 @@ public class Vehiculo {
 	@SequenceGenerator(name = "seq_vehiculo", sequenceName = "seq_vehiculo", allocationSize = 1)
 	@Column(name="vehi_id")
 	private Integer id;
-	@Column(name="vehi_placa")
+	@Column(name="vehi_placa", unique = true)
 	private String placa;
 	@Column(name="vehi_modelo")
 	private String modelo;

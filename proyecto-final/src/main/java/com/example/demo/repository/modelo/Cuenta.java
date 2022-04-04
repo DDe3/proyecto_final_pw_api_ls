@@ -11,25 +11,22 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "usuario")
-public class UsuarioEntidad {
+@Table(name = "cuenta")
+public class Cuenta {
 	@Id
-	@Column(name = "usua_id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_usario")
-	@SequenceGenerator(name = "seq_usario", sequenceName = "seq_usario", allocationSize = 1)
+	@Column(name = "cuen_id")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_cuenta")
+	@SequenceGenerator(name = "seq_cuenta", sequenceName = "seq_cuenta", allocationSize = 1)
 	private Integer id;
 
-	@Column(name = "usua_nombre")
-	private String nombre;
-	@Column(name = "usua_password")
+	@Column(name = "cuen_username", unique = true)
+	private String username;
+	@Column(name = "cuen_password")
 	private String password;
 	
 	@OneToOne
 	@MapsId
 	private Cliente cliente;
-	
-	
-	
 	
 	public Cliente getCliente() {
 		return cliente;
@@ -43,18 +40,21 @@ public class UsuarioEntidad {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getNombre() {
-		return nombre;
-	}
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+	
 	public String getPassword() {
 		return password;
 	}
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	
 
 	
 

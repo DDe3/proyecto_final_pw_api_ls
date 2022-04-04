@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.demo.repository.modelo.Reserva;
 import com.example.demo.to.ReservaReporteTo;
+import com.example.demo.to.ReservaTo;
 import com.example.demo.to.RetirarRequestTo;
 
 public interface IReservaService {
@@ -13,5 +14,6 @@ public interface IReservaService {
 	Reserva buscarReserva(String numero);
 	RetirarRequestTo buscarReservaRequest(String numero);
 	List<ReservaReporteTo> reporteReservas(String fechaInicio, String fechaFin);
+	ReservaTo buscarReservaRetirar(String numero);
 	
 }
